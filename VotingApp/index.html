@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Votación Friends Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div id="app-container">
+        <!-- Authentication Screen -->
+        <section id="auth-screen" class="screen active">
+            <div class="glass-panel">
+                <h1>Bienvenido Jugador</h1>
+                <p>Identifícate para empezar a votar</p>
+                <div id="players-list" class="grid-list">
+                    <!-- Players injected here by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Voting Screen -->
+        <section id="voting-screen" class="screen hidden">
+            <header class="app-header">
+                <div class="user-info">
+                    <span id="current-player-name">Jugador</span>
+                </div>
+                <div class="vote-counter-badge">
+                    <span id="votes-remaining">10</span> votos restantes
+                </div>
+            </header>
+
+            <div id="games-feed" class="games-feed-container">
+                <!-- Games cards injected here -->
+            </div>
+
+            <div class="navigation-controls">
+                <!-- Optional navigation or status -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
