@@ -250,7 +250,7 @@ const GAMES = [
     }
 ];
 
-const MAX_VOTES = 15;
+const MAX_VOTES = 10;
 
 // --- State ---
 let currentPlayer = null;
