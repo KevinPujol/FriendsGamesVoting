@@ -30,6 +30,38 @@
                 <div id="players-list" class="grid-list">
                     <!-- Players injected here by JS -->
                 </div>
+                <button class="player-btn"
+                    style="margin-top: 20px; width: 100%; border-color: var(--accent-color); background: rgba(255, 0, 85, 0.2);"
+                    onclick="showLeaderboard()">
+                    <i class="fas fa-trophy"></i> Ver Resultados
+                </button>
+            </div>
+        </section>
+
+        <!-- Leaderboard Screen -->
+        <section id="leaderboard-screen" class="screen hidden">
+            <div class="glass-panel" style="height: 100%;">
+                <div class="leaderboard-header">
+                    <h1>Ranking</h1>
+                    <div class="filter-controls">
+                        <button class="filter-btn active" onclick="filterLeaderboard(5)">Top 5</button>
+                        <button class="filter-btn" onclick="filterLeaderboard(10)">Top 10</button>
+                        <button class="filter-btn" onclick="filterLeaderboard(20)">Top 20</button>
+                        <button class="filter-btn" onclick="filterLeaderboard(36)">Todos</button>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="exclude-javiela" class="toggle-checkbox" checked
+                            onchange="loadLeaderboardData()">
+                        <span style="font-size: 0.9rem;">Excluir votos de Javiela</span>
+                    </label>
+                </div>
+
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <!-- Items injected here -->
+                    <div class="spinner"></div>
+                </div>
+
+                <button class="back-btn" onclick="hideLeaderboard()">Volver</button>
             </div>
         </section>
 

@@ -255,18 +255,29 @@ const MAX_VOTES = 10;
 // --- State ---
 let currentPlayer = null;
 let currentVotes = []; // Array of game IDs
+let leaderboardData = []; // Array of { game, count, percentage }
+let currentTopFilter = 5;
 
 // --- DOM Elements ---
 const authScreen = document.getElementById('auth-screen');
 const votingScreen = document.getElementById('voting-screen');
+const leaderboardScreen = document.getElementById('leaderboard-screen');
 const playersList = document.getElementById('players-list');
 const currentPlayerNameEl = document.getElementById('current-player-name');
 const votesRemainingEl = document.getElementById('votes-remaining');
 const gamesFeed = document.getElementById('games-feed');
+const leaderboardList = document.getElementById('leaderboard-list');
+const excludeJavielaCheckbox = document.getElementById('exclude-javiela');
 
 // --- Initialization ---
 function init() {
     renderPlayersList();
+    // Expose functions to window for onclick handlers
+    window.login = login;
+    window.showLeaderboard = showLeaderboard;
+    window.hideLeaderboard = hideLeaderboard;
+    window.filterLeaderboard = filterLeaderboard;
+    window.loadLeaderboardData = loadLeaderboardData;
 }
 
 // --- Auth Logic ---
@@ -298,6 +309,132 @@ async function login(player) {
     await loadVotes();
     renderGames();
     updateVoteCounter();
+}
+
+// --- Leaderboard Logic ---
+function showLeaderboard() {
+    authScreen.classList.remove('active');
+    authScreen.classList.add('hidden');
+
+    leaderboardScreen.style.display = 'flex';
+    leaderboardScreen.classList.remove('hidden');
+    leaderboardScreen.classList.add('active'); // No setTimeout needed for immediate feel or consistent with others
+
+    loadLeaderboardData();
+}
+
+function hideLeaderboard() {
+    leaderboardScreen.classList.remove('active');
+    leaderboardScreen.classList.add('hidden');
+
+    setTimeout(() => {
+        leaderboardScreen.style.display = 'none';
+        authScreen.style.display = 'flex';
+        authScreen.classList.remove('hidden');
+        authScreen.classList.add('active');
+    }, 500);
+}
+
+function filterLeaderboard(topN) {
+    currentTopFilter = topN;
+
+    // Update active button state
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        if (btn.textContent.includes(topN === 36 ? 'Todos' : topN)) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+
+    renderLeaderboard();
+}
+
+async function loadLeaderboardData() {
+    if (!db) {
+        leaderboardList.innerHTML = '<p style="color:#aaa">No disponible offline</p>';
+        return;
+    }
+
+    try {
+        const votesRef = ref(db, 'votes');
+        const snapshot = await get(votesRef);
+
+        if (!snapshot.exists()) {
+            leaderboardData = [];
+            renderLeaderboard();
+            return;
+        }
+
+        const allVotes = snapshot.val(); // Object { PlayerName: { GameID: timestamp, ... }, ... }
+        const voteCounts = {};
+        let totalVotes = 0;
+        const excludeJaviela = excludeJavielaCheckbox.checked;
+
+        // Tally votes
+        Object.entries(allVotes).forEach(([voterName, votesObj]) => {
+            // Javiela filter logic: Assuming "Javiela" is the exact string in PLAYERS array/Database
+            // If the user name contains "Javiela" (case insensitive just in case) skip
+            if (excludeJaviela && voterName.toLowerCase().includes('javiela')) {
+                return;
+            }
+
+            if (votesObj) {
+                Object.keys(votesObj).forEach(gameId => {
+                    voteCounts[gameId] = (voteCounts[gameId] || 0) + 1;
+                    totalVotes++;
+                });
+            }
+        });
+
+        // Map to array and Sort
+        leaderboardData = GAMES.map(game => {
+            const count = voteCounts[game.id] || 0;
+            const percentage = totalVotes > 0 ? ((count / totalVotes) * 100).toFixed(1) : 0;
+            return {
+                ...game,
+                count,
+                percentage
+            };
+        }).sort((a, b) => b.count - a.count);
+
+        renderLeaderboard();
+
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        leaderboardList.innerHTML = '<p style="color:red">Error cargando datos</p>';
+    }
+}
+
+function renderLeaderboard() {
+    leaderboardList.innerHTML = '';
+
+    const sliceLimit = currentTopFilter;
+    const itemsToShow = leaderboardData.slice(0, sliceLimit);
+
+    // Handle empty state
+    if (itemsToShow.length === 0 || itemsToShow[0].count === 0) {
+        leaderboardList.innerHTML = '<p style="margin-top:20px; color:#aaa">Aún no hay votos registrados.</p>';
+        return;
+    }
+
+    itemsToShow.forEach((item, index) => {
+        const rank = index + 1;
+        const div = document.createElement('div');
+        div.className = `leaderboard-item ${rank <= 3 ? 'top-3' : ''}`;
+
+        div.innerHTML = `
+            <div class="rank">#${rank}</div>
+            <div class="info">
+                <h3>${item.title}</h3>
+                <div class="stats">
+                    <span class="score-badge"><i class="fas fa-heart"></i> ${item.count}</span>
+                    <span>${item.percentage}%</span>
+                </div>
+            </div>
+        `;
+        leaderboardList.appendChild(div);
+    });
 }
 
 // --- Voting Logic ---

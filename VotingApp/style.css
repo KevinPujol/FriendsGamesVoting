@@ -360,3 +360,127 @@ body {
         transform: rotate(360deg);
     }
 }
+
+/* Leaderboard Screen */
+#leaderboard-screen {
+    z-index: 30;
+    /* Above others */
+}
+
+.leaderboard-header {
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.filter-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.filter-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn.active {
+    background: var(--primary-gradient);
+    border-color: transparent;
+    font-weight: 600;
+}
+
+/* Toggle Switch Styled Checkbox */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 10px;
+}
+
+.toggle-checkbox {
+    accent-color: var(--accent-color);
+    width: 18px;
+    height: 18px;
+}
+
+.leaderboard-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leaderboard-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.leaderboard-item .rank {
+    font-size: 1.2rem;
+    font-weight: 700;
+    width: 30px;
+    color: #aaa;
+}
+
+.leaderboard-item.top-3 .rank {
+    color: #FFD700;
+    /* Gold */
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.leaderboard-item .info {
+    flex: 1;
+}
+
+.leaderboard-item h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.leaderboard-item .stats {
+    font-size: 0.85rem;
+    color: #ccc;
+    display: flex;
+    gap: 10px;
+}
+
+.leaderboard-item .score-badge {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.back-btn {
+    margin-top: 20px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 100%;
+    flex-shrink: 0;
+}
