@@ -365,6 +365,15 @@ body {
 #leaderboard-screen {
     z-index: 30;
     /* Above others */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+#leaderboard-screen .glass-panel {
+    max-height: 90%;
+    height: 100%;
+    width: 100%;
 }
 
 .leaderboard-header {
