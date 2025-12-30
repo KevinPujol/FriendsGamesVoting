@@ -267,7 +267,6 @@ const currentPlayerNameEl = document.getElementById('current-player-name');
 const votesRemainingEl = document.getElementById('votes-remaining');
 const gamesFeed = document.getElementById('games-feed');
 const leaderboardList = document.getElementById('leaderboard-list');
-const excludeJavielaCheckbox = document.getElementById('exclude-javiela');
 
 // --- Initialization ---
 function init() {
@@ -369,16 +368,9 @@ async function loadLeaderboardData() {
         const allVotes = snapshot.val(); // Object { PlayerName: { GameID: timestamp, ... }, ... }
         const voteCounts = {};
         let totalVotes = 0;
-        const excludeJaviela = excludeJavielaCheckbox.checked;
 
         // Tally votes
         Object.entries(allVotes).forEach(([voterName, votesObj]) => {
-            // Javiela filter logic: Assuming "Javiela" is the exact string in PLAYERS array/Database
-            // If the user name contains "Javiela" (case insensitive just in case) skip
-            if (excludeJaviela && voterName.toLowerCase().includes('javiela')) {
-                return;
-            }
-
             if (votesObj) {
                 Object.keys(votesObj).forEach(gameId => {
                     voteCounts[gameId] = (voteCounts[gameId] || 0) + 1;
